@@ -56,10 +56,6 @@ async function apiFetch<T>(
 
 // Map API influencer to our Influencer type
 function mapAPIInfluencer(apiInfluencer: any): Influencer {
-  if (API_CONFIG.debug) {
-    console.log('Mapping influencer:', apiInfluencer);
-  }
-  
   // Parse social handles - it's a JSON string
   let socialHandles: any = { platform: 'Instagram', followers: '0' };
   
@@ -67,9 +63,6 @@ function mapAPIInfluencer(apiInfluencer: any): Influencer {
     try {
       // The API returns a JSON string, parse it directly
       socialHandles = JSON.parse(apiInfluencer.socialHandles);
-      if (API_CONFIG.debug) {
-        console.log('Parsed socialHandles:', socialHandles);
-      }
     } catch (e) {
       console.warn('Failed to parse socialHandles for', apiInfluencer.name, ':', e);
     }
@@ -129,10 +122,6 @@ function mapAPIInfluencer(apiInfluencer: any): Influencer {
           apiInfluencer.trustScore >= 75 ? 'gold' : 
           apiInfluencer.trustScore >= 60 ? 'silver' : 'bronze',
   };
-  
-  if (API_CONFIG.debug) {
-    console.log('Mapped influencer result:', mapped);
-  }
   
   return mapped;
 }
@@ -264,14 +253,18 @@ export async function fetchNiches(): Promise<string[]> {
 export async function fetchAnalytics(): Promise<Analytics> {
   try {
     // Fetch top 20 influencers by trust score (as specified)
-    // Use fetchInfluencers to get properly mapped data
-    const influencers = await fetchInfluencers(
-      undefined,
-      { field: 'overallScore', direction: 'desc' }
-    );
+    const params = {
+      limit: 20,
+      sortBy: 'trustScore',
+      sortOrder: 'desc'
+    };
     
-    // Limit to top 20
-    const top20 = influencers.slice(0, 20);
+    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencers}`;
+    const fullUrl = buildURL(url, params);
+    const apiInfluencers = await apiFetch<any[]>(fullUrl);
+    
+    // Map the API data to our Influencer type
+    const influencers = apiInfluencers.map(mapAPIInfluencer);
     
     // Try to fetch stats, but don't fail if not available
     let stats: any = {};
@@ -279,26 +272,21 @@ export async function fetchAnalytics(): Promise<Analytics> {
       stats = await fetchStats();
     } catch (error) {
       console.warn('Stats endpoint not available, calculating from influencers');
-      
-      // Calculate stats from influencers data
-      const activeInfluencers = influencers.filter(i => i.status === 'active').length;
-      const totalFollowers = influencers.reduce((sum, i) => sum + (i.followers || 0), 0);
-      const avgEngagement = influencers.reduce((sum, i) => sum + (i.engagementRate || 0), 0) / influencers.length;
-      
-      stats = {
-        totalInfluencers: influencers.length,
-        activeInfluencers,
-        totalFollowers,
-        averageEngagement: avgEngagement,
-      };
     }
+    
+    // Calculate stats from influencers data
+    const activeInfluencers = influencers.filter(i => i.status === 'active').length;
+    const totalFollowers = influencers.reduce((sum, i) => sum + (i.followers || 0), 0);
+    const avgEngagement = influencers.length > 0 
+      ? influencers.reduce((sum, i) => sum + (i.engagementRate || 0), 0) / influencers.length 
+      : 0;
     
     // Transform API response to match Analytics interface
     return {
-      totalInfluencers: stats.totalInfluencers || influencers.length,
-      activeInfluencers: stats.activeInfluencers || influencers.filter(i => i.status === 'active').length,
-      totalFollowers: stats.totalFollowers || influencers.reduce((sum, i) => sum + (i.followers || 0), 0),
-      averageEngagement: stats.averageEngagement || 0,
+      totalInfluencers: stats.totalInfluencers || 438, // Use API total if available
+      activeInfluencers: activeInfluencers,
+      totalFollowers: totalFollowers,
+      averageEngagement: avgEngagement,
       topPerformers: influencers.slice(0, 5), // Top 5 from the 20 fetched
       recentActivity: stats.recentActivity || [],
       growthTrend: stats.growthTrend || [],

@@ -11,8 +11,18 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
       },
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.dicebear.com',
+      },
     ],
   },
+  // Suppress the workspace root warning
+  outputFileTracingRoot: undefined,
 };
 
 export default nextConfig;

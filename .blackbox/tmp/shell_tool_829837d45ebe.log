@@ -47,3 +47,22 @@ Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
  GET / 200 in 56ms
  ✓ Compiled in 288ms (571 modules)
+ ✓ Compiled in 352ms (571 modules)
+ ✓ Compiled in 88ms (571 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 221ms
+ ✓ Compiled in 248ms (585 modules)
+ ✓ Compiled in 70ms (571 modules)
+ ✓ Compiled in 94ms (571 modules)
+ ✓ Compiled in 74ms (571 modules)
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.5.6
+   - Local:        http://localhost:3000
+   - Network:      http://10.81.90.121:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1289ms

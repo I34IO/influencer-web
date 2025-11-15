@@ -20,13 +20,6 @@ export default function DashboardPage() {
   const loadAnalytics = async () => {
     try {
       const data = await fetchAnalytics();
-      console.log('Analytics data received:', data);
-      console.log('Top performers:', data.topPerformers);
-      if (data.topPerformers.length > 0) {
-        console.log('First performer:', data.topPerformers[0]);
-        console.log('First performer fullName:', data.topPerformers[0].fullName);
-        console.log('First performer followers:', data.topPerformers[0].followers);
-      }
       setAnalytics(data);
     } catch (error) {
       console.error('Failed to load analytics:', error);
