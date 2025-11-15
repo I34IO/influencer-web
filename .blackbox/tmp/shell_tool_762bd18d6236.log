@@ -1,0 +1,296 @@
+
+> influencer-tracker@0.1.0 dev
+> next dev
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/roane/roane/perso/hack-the-gap/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /Users/roane/roane/perso/hack-the-gap/influencer-app/package-lock.json
+
+   ▲ Next.js 15.5.6
+   - Local:        http://localhost:3000
+   - Network:      http://10.81.90.121:3000
+
+ ✓ Starting...
+ ✓ Ready in 1161ms
+ ○ Compiling / ...
+ ✓ Compiled / in 733ms (558 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 963ms
+ ✓ Compiled in 57ms (240 modules)
+ ✓ Compiled /_not-found in 63ms (549 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /manifest.json 404 in 150ms
+ ⚠ Cross origin request detected from 10.81.90.121 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled in 86ms (240 modules)
+ ✓ Compiled in 56ms (240 modules)
+ ✓ Compiled in 58ms (240 modules)
+ ✓ Compiled in 82ms (240 modules)
+ ✓ Compiled in 51ms (240 modules)
+ ✓ Compiled in 217ms (579 modules)
+ ✓ Compiled in 123ms (579 modules)
+ ✓ Compiled in 96ms (581 modules)
+ ✓ Compiled in 116ms (581 modules)
+ ✓ Compiled in 154ms (585 modules)
+ ✓ Compiled in 124ms (585 modules)
+ ✓ Compiled in 103ms (585 modules)
+ ✓ Compiled in 117ms (585 modules)
+ ✓ Compiled in 95ms (585 modules)
+ ✓ Compiled in 110ms (571 modules)
+ ✓ Compiled in 145ms (585 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 88ms
+ ✓ Compiled in 293ms (585 modules)
+ ✓ Compiled in 130ms (585 modules)
+ ✓ Compiled in 87ms (585 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 45ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 42ms
+ ✓ Compiled /_not-found in 356ms (576 modules)
+ ⨯ Error: Cannot find module './vendor-chunks/zustand.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/app/_not-found/page.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/app/_not-found/page.js:315:47)
+    at Object.<anonymous> (.next/server/app/_not-found/page.js:318:3) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 594ms (916 modules)
+ GET /manifest.json 500 in 2123ms
+ ✓ Compiled in 309ms (832 modules)
+ ✓ Compiled in 119ms (832 modules)
+ ✓ Compiled in 158ms (832 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 48ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET / 200 in 41ms
+ ✓ Compiled /_not-found in 236ms (823 modules)
+ ⨯ Error: Cannot find module './923.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/app/_not-found/page.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/app/_not-found/page.js:2:13859)
+    at Object.<anonymous> (.next/server/app/_not-found/page.js:2:13903) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ ✓ Compiled /_error in 246ms (916 modules)
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ Error: Cannot find module './611.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/pages/_document.js:1:321)
+    at Object.<anonymous> (.next/server/pages/_document.js:1:366) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ GET /manifest.json 500 in 569ms
+ GET /manifest.json 500 in 23ms
+   Reload env: .env.local
+ ✓ Compiled in 2.1s (850 modules)
+ ✓ Compiled in 254ms (818 modules)
+   Reload env: .env.local
+ ✓ Compiled in 285ms (818 modules)
+ ⨯ Error: ENOENT: no such file or directory, open '/Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/vendor-chunks/next.js'
+    at <unknown> (.next/server/app/page.js:423:47)
+    at Object.<anonymous> (.next/server/app/page.js:426:3) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/vendor-chunks/next.js',
+  page: '/'
+}
+ ✓ Compiled /_error in 182ms (911 modules)
+ ⨯ Error: Cannot find module './611.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/pages/_document.js:1:321)
+    at Object.<anonymous> (.next/server/pages/_document.js:1:366) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+Error: ENOENT: no such file or directory, open '/Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/vendor-chunks/next.js'
+    at <unknown> (.next/server/app/page.js:423:47)
+    at Object.<anonymous> (.next/server/app/page.js:426:3) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/vendor-chunks/next.js',
+  page: '/'
+}
+ ⨯ Error: Cannot find module './611.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/pages/_document.js:1:321)
+    at Object.<anonymous> (.next/server/pages/_document.js:1:366) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ GET / 500 in 339ms
+ GET / 500 in 29ms
+ ⨯ Error: Cannot find module './vendor-chunks/zustand.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/app/page.js:423:47)
+    at Object.<anonymous> (.next/server/app/page.js:426:3) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ⨯ Error: Cannot find module './611.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/pages/_document.js:1:321)
+    at Object.<anonymous> (.next/server/pages/_document.js:1:366) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+Error: Cannot find module './vendor-chunks/zustand.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/app/page.js:423:47)
+    at Object.<anonymous> (.next/server/app/page.js:426:3) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array],
+  page: '/'
+}
+ ⨯ Error: Cannot find module './611.js'
+Require stack:
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/webpack-runtime.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/.next/server/pages/_document.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/require.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/load-components.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/utils.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/options.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/swc/index.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/build/next-config-ts/transpile-config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/config.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/next.js
+- /Users/roane/roane/perso/hack-the-gap/influencer-app/node_modules/next/dist/server/lib/start-server.js
+    at <unknown> (.next/server/pages/_document.js:1:321)
+    at Object.<anonymous> (.next/server/pages/_document.js:1:366) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ ⨯ [TypeError: Cannot read properties of undefined (reading '/_app')]
+[TypeError: Cannot read properties of undefined (reading '/_app')]
+ GET / 500 in 192ms
+ GET / 500 in 39ms
