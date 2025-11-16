@@ -18,22 +18,22 @@ export async function OPTIONS() {
 export async function GET(request: NextRequest) {
   try {
     const backendUrl = `${BACKEND_API_URL}/niches`;
-    
+
     console.log('[API Proxy] Fetching niches from:', backendUrl);
-    
+
     const response = await fetch(backendUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Backend API returned ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -43,17 +43,7 @@ export async function GET(request: NextRequest) {
     console.error('Error proxying niches to backend:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch niches from backend' },
-      { 
-        status: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
-  }
-}
- from backend' },
-      { 
+      {
         status: 500,
         headers: {
           'Access-Control-Allow-Origin': '*',
