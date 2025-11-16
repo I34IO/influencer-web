@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.80.222.41:3000/api/public';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Disable CORS
 export async function OPTIONS() {
@@ -59,6 +59,16 @@ export async function GET(request: NextRequest) {
     console.error('Error proxying search to backend:', error);
     return NextResponse.json(
       { success: false, error: 'Search failed' },
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+  }
+}
+Search failed' },
       { 
         status: 500,
         headers: {

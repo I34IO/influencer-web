@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.80.222.41:3000/api/public';
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Disable CORS
 export async function OPTIONS() {
@@ -43,6 +43,16 @@ export async function GET(request: NextRequest) {
     console.error('Error proxying niches to backend:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch niches from backend' },
+      { 
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+  }
+}
+ from backend' },
       { 
         status: 500,
         headers: {
