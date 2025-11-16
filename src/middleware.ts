@@ -16,6 +16,13 @@ const publicRoutes = [
 const protectedRoutes = ['/admin'];
 
 export async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
+
+  // Block admin routes in production
+  if (process.env.NODE_ENV === 'production' && pathname.startsWith('/admin')) {
+    return NextResponse.redirect(new URL('/', req.url));
+  }
+
   let response = NextResponse.next({
     request: {
       headers: req.headers,
@@ -73,8 +80,6 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { pathname } = req.nextUrl;
-
   // Check if the current path is a protected route
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
@@ -87,9 +92,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // If authenticated and trying to access login/signup, redirect to admin
+  // If authenticated and trying to access login/signup, redirect to dashboard
   if (session && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/admin', req.url));
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   return response;

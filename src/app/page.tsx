@@ -64,12 +64,14 @@ export default function DashboardPage() {
               <LanguageSwitcher />
               {user ? (
                 <div className="flex items-center gap-2">
-                  <Link
-                    href="/admin"
-                    className="px-3 py-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
-                  >
-                    Admin
-                  </Link>
+                  {process.env.NODE_ENV !== 'production' && (
+                    <Link
+                      href="/admin"
+                      className="px-3 py-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <button
                     onClick={() => signOut()}
                     className="px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -138,9 +140,10 @@ export default function DashboardPage() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t.dashboard.topPerformers}</h2>
           <div className="space-y-3">
             {analytics.topPerformers.map((influencer) => (
-              <div
+              <Link
                 key={influencer.id}
-                className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600 active:bg-gray-100 dark:active:bg-gray-600 transition-colors"
+                href={`/influencers/${influencer.id}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 active:bg-gray-200 dark:active:bg-gray-500 transition-colors cursor-pointer"
               >
                 <Image
                   src={getImageWithFallback(influencer.profileImage, influencer.fullName, 96)}
@@ -173,7 +176,7 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t.dashboard.score}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -256,7 +259,7 @@ export default function DashboardPage() {
       {/* Mobile Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-3 md:hidden z-50 shadow-lg">
         <div className="flex items-center justify-around gap-2">
-          <a 
+          <Link 
             href="/influencers" 
             className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-1"
           >
@@ -264,7 +267,7 @@ export default function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Influencers</span>
-          </a>
+          </Link>
           
           <a 
             href="/rankings" 
