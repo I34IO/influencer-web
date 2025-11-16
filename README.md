@@ -20,6 +20,19 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
 
+## 🎬 YouTube Profile Picture Update
+
+Need to update influencer profile pictures from YouTube? See the [YouTube Setup Guide](./YOUTUBE_SETUP_GUIDE.md) for detailed instructions.
+
+Quick command:
+```bash
+# Test first (dry run)
+npm run update-youtube-profiles -- --dry-run --limit 5
+
+# Run the actual update
+npm run update-youtube-profiles
+```
+
 ---
 
 ## 📁 Project Structure

@@ -58,52 +58,52 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           Admin Dashboard
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">
           Manage all database tables and records
         </p>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Influencers</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">438</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Influencers</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mt-2">438</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Users</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">—</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Users</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mt-2">—</p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Total Mentions</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">—</p>
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total Mentions</p>
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mt-2">—</p>
         </div>
       </div>
 
       {/* Tables Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {tables.map((table) => (
           <Link
             key={table.name}
             href={table.href}
-            className="block bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-all hover:shadow-md"
+            className="block bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-all hover:shadow-md"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 rounded-lg ${table.color} flex items-center justify-center text-2xl`}>
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${table.color} flex items-center justify-center text-xl sm:text-2xl`}>
                 {table.icon}
               </div>
               {table.count !== '—' && (
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                <span className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-white">
                   {table.count}
                 </span>
               )}
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">
               {table.name}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               {table.description}
             </p>
           </Link>
@@ -111,32 +111,32 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <Link
             href="/admin/influencers?action=create"
-            className="px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-center font-medium"
+            className="px-4 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-center font-medium text-sm sm:text-base"
           >
             + Add Influencer
           </Link>
           <Link
             href="/admin/mentions?action=create"
-            className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center font-medium"
+            className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center font-medium text-sm sm:text-base"
           >
             + Add Mention
           </Link>
           <Link
             href="/admin/users?action=create"
-            className="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-center font-medium"
+            className="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-center font-medium text-sm sm:text-base"
           >
             + Add User
           </Link>
           <Link
             href="/admin/community-signals?action=create"
-            className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-center font-medium"
+            className="px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-center font-medium text-sm sm:text-base"
           >
             + Add Signal
           </Link>

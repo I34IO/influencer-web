@@ -88,12 +88,12 @@ export default function InfluencerDetailPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header with Back Button */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="flex items-center gap-2 text-sm sm:text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back
@@ -101,11 +101,11 @@ export default function InfluencerDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="space-y-6">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">
+        <div className="space-y-4 sm:space-y-6">
           {/* Profile Header Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
-            <div className="flex flex-col md:flex-row gap-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
               {/* Profile Image */}
               <div className="flex-shrink-0">
                 <Image
@@ -113,7 +113,7 @@ export default function InfluencerDetailPage() {
                   alt={influencer.fullName}
                   width={160}
                   height={160}
-                  className="w-32 h-32 md:w-40 md:h-40 rounded-2xl ring-4 ring-primary-100 dark:ring-primary-800/50 object-cover mx-auto md:mx-0"
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-xl sm:rounded-2xl ring-4 ring-primary-100 dark:ring-primary-800/50 object-cover mx-auto sm:mx-0"
                   unoptimized
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -123,10 +123,10 @@ export default function InfluencerDetailPage() {
               </div>
 
               {/* Profile Info */}
-              <div className="flex-1 text-center md:text-left">
+              <div className="flex-1 text-center sm:text-left">
                 {/* Name and Verified Badge */}
-                <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                     {influencer.fullName}
                   </h1>
                   {influencer.verified && (
@@ -137,16 +137,16 @@ export default function InfluencerDetailPage() {
                 </div>
 
                 {/* Username */}
-                <p className="text-lg text-gray-600 dark:text-gray-400 mb-3">@{influencer.username}</p>
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-3">@{influencer.username}</p>
 
                 {/* Category Badge */}
-                <div className="inline-flex items-center px-4 py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-semibold mb-4">
+                <div className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-xs sm:text-sm font-semibold mb-4">
                   {influencer.category}
                 </div>
 
                 {/* Social Media Platform */}
-                <div className="flex items-center justify-center md:justify-start gap-2 mb-4">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Platform:</span>
+                <div className="flex items-center justify-center sm:justify-start gap-2 mb-4">
+                  <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Platform:</span>
                   <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-lg">
                     {influencer.platform === 'instagram' && (
                       <>
@@ -184,26 +184,26 @@ export default function InfluencerDetailPage() {
                 </div>
 
                 {/* Followers Count */}
-                <div className="flex items-center justify-center md:justify-start gap-6">
+                <div className="flex items-center justify-center sm:justify-start gap-4 sm:gap-6">
                   <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                       {formatNumber(influencer.followers)}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Followers</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Followers</p>
                   </div>
-                  <div className="w-px h-12 bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="w-px h-10 sm:h-12 bg-gray-300 dark:bg-gray-600"></div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                       {formatNumber(influencer.following)}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Following</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Following</p>
                   </div>
-                  <div className="w-px h-12 bg-gray-300 dark:bg-gray-600"></div>
+                  <div className="w-px h-10 sm:h-12 bg-gray-300 dark:bg-gray-600"></div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                       {formatNumber(influencer.totalPosts)}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Posts</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Posts</p>
                   </div>
                 </div>
               </div>
@@ -211,19 +211,19 @@ export default function InfluencerDetailPage() {
           </div>
 
           {/* Trust Score Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Performance Metrics</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">Performance Metrics</h2>
             
             {/* Overall Score - Prominent Display */}
-            <div className="bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-6 border border-primary-200 dark:border-primary-800">
+            <div className="bg-gradient-to-br from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-lg sm:rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 border border-primary-200 dark:border-primary-800">
               <div className="text-center">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Overall Trust Score</p>
-                <div className="flex items-center justify-center gap-3">
-                  <div className="text-5xl font-bold text-primary-600 dark:text-primary-400">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Overall Trust Score</p>
+                <div className="flex items-center justify-center gap-2 sm:gap-3">
+                  <div className="text-4xl sm:text-5xl font-bold text-primary-600 dark:text-primary-400">
                     {influencer.overallScore}
                   </div>
                   <div className="text-left">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">out of 100</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">out of 100</p>
                     <div className="flex items-center gap-1 mt-1">
                       {[...Array(5)].map((_, i) => (
                         <svg
@@ -246,7 +246,7 @@ export default function InfluencerDetailPage() {
             </div>
 
             {/* Score Breakdown Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
               {/* Engagement Score */}
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-between mb-2">
@@ -297,7 +297,7 @@ export default function InfluencerDetailPage() {
             </div>
 
             {/* Engagement Metrics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Engagement Rate</p>
                 <p className="text-xl font-bold text-gray-900 dark:text-white">
@@ -326,8 +326,8 @@ export default function InfluencerDetailPage() {
           </div>
 
           {/* About Section */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">About</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4">About</h2>
             
             {/* Bio */}
             {influencer.bio ? (
@@ -341,7 +341,7 @@ export default function InfluencerDetailPage() {
             )}
 
             {/* Additional Info Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               {influencer.location && (
                 <div className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -408,12 +408,12 @@ export default function InfluencerDetailPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 onClick={handleKnowMore}
-                className="flex-1 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 hover:bg-primary-700 text-white text-sm sm:text-base font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Know More
@@ -421,9 +421,9 @@ export default function InfluencerDetailPage() {
               
               <button
                 onClick={handleClaimProfile}
-                className="flex-1 px-6 py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 px-4 sm:px-6 py-2.5 sm:py-3 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white text-sm sm:text-base font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-200 flex items-center justify-center gap-2"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 Claim This Profile

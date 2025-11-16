@@ -144,3 +144,9 @@ export interface SortOption {
   field: keyof Influencer;
   direction: 'asc' | 'desc';
 }
+
+// Export new feature types
+export * from './community';
+export * from './gamification';
+export * from './transparency';
+export * from './subscription';

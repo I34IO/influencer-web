@@ -55,14 +55,14 @@ export default function DashboardPage() {
       <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="px-4 py-3">
           {/* Top Row - Logo, Search, and Controls */}
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex-shrink-0">
-              <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">{t.app.title}</h1>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">{t.app.subtitle}</p>
-            </div>
+          <div className="flex items-center justify-between gap-2">
+            <Link href="/" className="flex-shrink-0 min-w-0">
+              <h1 className="text-base sm:text-xl font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors truncate">{t.app.title}</h1>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5 hidden sm:block">{t.app.subtitle}</p>
+            </Link>
 
-            {/* Search Bar - Inline */}
-            <div className="relative flex-1 max-w-xl hidden md:block">
+            {/* Search Bar - Desktop Only */}
+            <div className="relative flex-1 max-w-xl hidden lg:block">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -87,22 +87,24 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <ThemeToggle />
-              <LanguageSwitcher />
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              <div className="hidden sm:flex items-center gap-1">
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
               {user ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   {process.env.NODE_ENV !== 'production' && (
                     <Link
                       href="/admin"
-                      className="px-3 py-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
+                      className="hidden md:block px-3 py-1.5 text-sm font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
                     >
                       Admin
                     </Link>
                   )}
                   <button
                     onClick={() => signOut()}
-                    className="px-3 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                    className="px-2 sm:px-3 py-1.5 text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                   >
                     Logout
                   </button>
@@ -110,7 +112,7 @@ export default function DashboardPage() {
               ) : (
                 <Link
                   href="/login"
-                  className="px-4 py-1.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-sm transition-colors"
+                  className="px-3 sm:px-4 py-1.5 text-xs sm:text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-sm transition-colors whitespace-nowrap"
                 >
                   Login
                 </Link>
@@ -118,33 +120,126 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Mobile Search Bar */}
-          <div className="relative md:hidden mt-3">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="Search influencers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              >
-                <svg className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          {/* Mobile Search Bar and Settings */}
+          <div className="lg:hidden mt-3 space-y-3">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-              </button>
-            )}
+              </div>
+              <input
+                type="text"
+                placeholder="Search influencers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <svg className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+            
+            {/* Mobile Theme and Language Controls */}
+            <div className="flex items-center justify-between sm:hidden">
+              <span className="text-xs text-gray-600 dark:text-gray-400">Settings</span>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
+            </div>
           </div>
         </div>
       </header>
+
+      {/* Search Results Section - Shows when searching */}
+      {searchQuery && (
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
+          <div className="px-4 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                Search Results for "{searchQuery}"
+              </h3>
+              <button
+                onClick={() => setSearchQuery('')}
+                className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {analytics.topPerformers
+                .filter((influencer) => {
+                  const query = searchQuery.toLowerCase();
+                  return (
+                    influencer.fullName.toLowerCase().includes(query) ||
+                    influencer.username.toLowerCase().includes(query) ||
+                    influencer.category?.toLowerCase().includes(query)
+                  );
+                })
+                .map((influencer) => (
+                  <Link
+                    key={influencer.id}
+                    href={`/influencers/${influencer.id}`}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 active:bg-gray-200 dark:active:bg-gray-500 transition-colors cursor-pointer"
+                  >
+                    <Image
+                      src={getImageWithFallback(influencer.profileImage, influencer.fullName, 96)}
+                      alt={influencer.fullName}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full ring-2 ring-primary-100 dark:ring-primary-800/50 object-cover"
+                      unoptimized
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = getImageWithFallback(null, influencer.fullName, 96);
+                      }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                        {influencer.fullName}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        {influencer.username} • {formatNumber(influencer.followers)} followers
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0">
+                      <div className="bg-primary-100 dark:bg-primary-900/30 rounded-lg px-2.5 py-1 border border-transparent dark:border-primary-800/50">
+                        <p className="text-sm font-bold text-primary-600 dark:text-primary-300">
+                          {influencer.overallScore}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              {analytics.topPerformers.filter((influencer) => {
+                const query = searchQuery.toLowerCase();
+                return (
+                  influencer.fullName.toLowerCase().includes(query) ||
+                  influencer.username.toLowerCase().includes(query) ||
+                  influencer.category?.toLowerCase().includes(query)
+                );
+              }).length === 0 && (
+                <div className="text-center py-8">
+                  <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    No influencers found matching "{searchQuery}"
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="px-4 py-4 space-y-4">
@@ -193,17 +288,7 @@ export default function DashboardPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t.dashboard.topPerformers}</h2>
           <div className="space-y-3">
-            {analytics.topPerformers
-              .filter((influencer) => {
-                if (!searchQuery) return true;
-                const query = searchQuery.toLowerCase();
-                return (
-                  influencer.fullName.toLowerCase().includes(query) ||
-                  influencer.username.toLowerCase().includes(query) ||
-                  influencer.category?.toLowerCase().includes(query)
-                );
-              })
-              .map((influencer) => (
+            {analytics.topPerformers.map((influencer) => (
               <Link
                 key={influencer.id}
                 href={`/influencers/${influencer.id}`}
@@ -242,29 +327,6 @@ export default function DashboardPage() {
                 </div>
               </Link>
             ))}
-            {searchQuery && analytics.topPerformers.filter((influencer) => {
-              const query = searchQuery.toLowerCase();
-              return (
-                influencer.fullName.toLowerCase().includes(query) ||
-                influencer.username.toLowerCase().includes(query) ||
-                influencer.category?.toLowerCase().includes(query)
-              );
-            }).length === 0 && (
-              <div className="text-center py-8">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  No influencers found matching "{searchQuery}"
-                </p>
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="mt-3 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
-                >
-                  Clear search
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -350,13 +412,13 @@ export default function DashboardPage() {
             href="/influencers" 
             className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-1"
           >
-            <svg className="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Influencers</span>
           </Link>
           
-          <a 
+          <Link 
             href="/rankings" 
             className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-1"
           >
@@ -364,9 +426,9 @@ export default function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Rankings</span>
-          </a>
+          </Link>
           
-          <a 
+          <Link 
             href="/qr/scan" 
             className="flex flex-col items-center gap-1 px-4 py-2 bg-secondary-600 dark:bg-secondary-500 rounded-xl hover:bg-secondary-700 dark:hover:bg-secondary-600 transition-colors shadow-lg flex-1"
           >
@@ -374,7 +436,7 @@ export default function DashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
             </svg>
             <span className="text-xs font-bold text-white">Scan QR</span>
-          </a>
+          </Link>
         </div>
       </nav>
     </div>
