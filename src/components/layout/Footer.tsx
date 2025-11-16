@@ -16,7 +16,7 @@ export default function Footer() {
                 <span className="text-2xl">📊</span>
               </div>
               <span className="text-xl font-bold text-gray-900 dark:text-white">
-                InfluenceTracker
+                Trust Influencer
               </span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
@@ -188,7 +188,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              &copy; {currentYear} InfluenceTracker. All rights reserved.
+              &copy; {currentYear} Trust Influencer. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <Link

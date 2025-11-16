@@ -14,6 +14,7 @@ import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 export default function DashboardPage() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const t = useTranslations();
   const { user, signOut } = useAuth();
 
@@ -53,13 +54,40 @@ export default function DashboardPage() {
       {/* Mobile Header */}
       <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="px-4 py-3">
-          {/* Top Row - Logo and Controls */}
-          <div className="flex items-center justify-between mb-3">
-            <div>
+          {/* Top Row - Logo, Search, and Controls */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-shrink-0">
               <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">{t.app.title}</h1>
               <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5">{t.app.subtitle}</p>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Search Bar - Inline */}
+            <div className="relative flex-1 max-w-xl hidden md:block">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search influencers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-9 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  <svg className="h-4 w-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2 flex-shrink-0">
               <ThemeToggle />
               <LanguageSwitcher />
               {user ? (
@@ -88,6 +116,32 @@ export default function DashboardPage() {
                 </Link>
               )}
             </div>
+          </div>
+
+          {/* Mobile Search Bar */}
+          <div className="relative md:hidden mt-3">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search influencers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-10 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <svg className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -139,7 +193,17 @@ export default function DashboardPage() {
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t.dashboard.topPerformers}</h2>
           <div className="space-y-3">
-            {analytics.topPerformers.map((influencer) => (
+            {analytics.topPerformers
+              .filter((influencer) => {
+                if (!searchQuery) return true;
+                const query = searchQuery.toLowerCase();
+                return (
+                  influencer.fullName.toLowerCase().includes(query) ||
+                  influencer.username.toLowerCase().includes(query) ||
+                  influencer.category?.toLowerCase().includes(query)
+                );
+              })
+              .map((influencer) => (
               <Link
                 key={influencer.id}
                 href={`/influencers/${influencer.id}`}
@@ -178,6 +242,29 @@ export default function DashboardPage() {
                 </div>
               </Link>
             ))}
+            {searchQuery && analytics.topPerformers.filter((influencer) => {
+              const query = searchQuery.toLowerCase();
+              return (
+                influencer.fullName.toLowerCase().includes(query) ||
+                influencer.username.toLowerCase().includes(query) ||
+                influencer.category?.toLowerCase().includes(query)
+              );
+            }).length === 0 && (
+              <div className="text-center py-8">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  No influencers found matching "{searchQuery}"
+                </p>
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="mt-3 text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -186,7 +273,7 @@ export default function DashboardPage() {
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t.dashboard.recentActivity}</h2>
           <div className="space-y-3">
             {analytics.recentActivity.length > 0 ? (
-              analytics.recentActivity.map((activity) => {
+              analytics.recentActivity.slice(0, 5).map((activity) => {
                 // Determine icon based on activity type
                 const getActivityIcon = (type: string) => {
                   switch (type) {

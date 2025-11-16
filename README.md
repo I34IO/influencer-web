@@ -1,4 +1,4 @@
-# 🎯 InfluenceTracker - Influencer Monitoring Dashboard
+# 🎯 Trust Influencer - Influencer Monitoring Dashboard
 
 A modern, mobile-first dashboard for tracking and managing influencer performance, rankings, and event check-ins.
 
@@ -418,7 +418,7 @@ vercel
 Create `.env.local`:
 ```
 NEXT_PUBLIC_API_URL=https://your-api.com
-NEXT_PUBLIC_APP_NAME=InfluenceTracker
+NEXT_PUBLIC_APP_NAME=TrustInfluencer
 ```
 
 ---

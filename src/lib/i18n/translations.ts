@@ -38,7 +38,7 @@ export interface Translations {
 export const translations: Record<string, Translations> = {
   en: {
     app: {
-      title: 'InfluenceTracker',
+      title: 'Trust Influencer',
       subtitle: 'Monitor and analyze influencer performance',
     },
     dashboard: {
@@ -74,7 +74,7 @@ export const translations: Record<string, Translations> = {
   },
   fr: {
     app: {
-      title: 'InfluenceTracker',
+      title: 'Trust Influencer',
       subtitle: 'Surveillez et analysez les performances des influenceurs',
     },
     dashboard: {

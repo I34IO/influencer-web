@@ -16,7 +16,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'InfluenceTracker - Influencer Monitoring Dashboard',
+  title: 'Trust Influencer - Influencer Monitoring Dashboard',
   description: 'Track, analyze, and manage influencer performance with real-time rankings and analytics',
   manifest: '/manifest.json',
 };
