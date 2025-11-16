@@ -2,9 +2,18 @@
 
 import { useState } from 'react';
 
+interface HistoryRecord {
+  analyzedAt: string;
+  trustScore: number;
+  dramaCount: number;
+  goodActionCount: number;
+  neutralCount: number;
+  avgSentiment: number;
+}
+
 export default function AnalysisHistoryAdmin() {
   const [influencerId, setInfluencerId] = useState('');
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [loading, setLoading] = useState(false);
 
   const loadHistory = async () => {

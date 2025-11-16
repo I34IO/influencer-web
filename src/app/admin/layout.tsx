@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/components/providers';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function AdminLayout({
   children,
@@ -10,7 +12,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push('/login');
+  };
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: '📊' },
@@ -23,6 +32,7 @@ export default function AdminLayout({
   ];
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
@@ -84,7 +94,15 @@ export default function AdminLayout({
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
+            {user && (
+              <div className="px-4 py-2 text-sm">
+                <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">Signed in as</p>
+                <p className="text-gray-900 dark:text-gray-100 font-medium truncate">
+                  {user.email}
+                </p>
+              </div>
+            )}
             <Link
               href="/"
               className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
@@ -92,6 +110,13 @@ export default function AdminLayout({
               <span>←</span>
               <span>Back to Dashboard</span>
             </Link>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            >
+              <span>🚪</span>
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </aside>
@@ -110,7 +135,29 @@ export default function AdminLayout({
           </button>
           
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Admin Mode</span>
+            {user && (
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {user.user_metadata?.full_name || 'Admin User'}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {user.email}
+                  </p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-primary-600 dark:bg-primary-500 flex items-center justify-center text-white font-semibold">
+                  {(user.user_metadata?.full_name || user.email || 'A')[0].toUpperCase()}
+                </div>
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+              title="Logout"
+            >
+              <span>🚪</span>
+              <span>Logout</span>
+            </button>
           </div>
         </header>
 
@@ -120,5 +167,6 @@ export default function AdminLayout({
         </main>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { getImageWithFallback } from '@/lib/utils/placeholder';
 
 interface Influencer {
   id: string;
@@ -328,13 +330,18 @@ function InfluencersAdminContent() {
                   <tr key={influencer.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        {influencer.imageUrl && (
-                          <img
-                            src={influencer.imageUrl}
-                            alt={influencer.name}
-                            className="w-10 h-10 rounded-full"
-                          />
-                        )}
+                        <Image
+                          src={getImageWithFallback(influencer.imageUrl, influencer.name, 80)}
+                          alt={influencer.name}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10 rounded-full object-cover"
+                          unoptimized
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = getImageWithFallback(null, influencer.name, 80);
+                          }}
+                        />
                         <div>
                           <div className="text-sm font-medium text-gray-900 dark:text-white">
                             {influencer.name}

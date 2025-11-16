@@ -4,16 +4,41 @@ import {
   Ranking, 
   QRScan, 
   Event, 
-  Analytics, 
+  Analytics,
+  Activity,
   FilterOptions, 
   SortOption 
 } from '@/types';
 import { supabase } from '@/lib/supabase/client';
+import { getImageWithFallback } from '@/lib/utils/placeholder';
+
+// Database influencer type
+interface DBInfluencer {
+  id: string;
+  name: string;
+  imageUrl?: string;
+  summary?: string;
+  socialHandles?: string;
+  niche?: string;
+  trustScore: number;
+  dramaCount: number;
+  goodActionCount: number;
+  neutralCount: number;
+  avgSentiment: number;
+  language: string;
+  lastUpdated: string;
+  createdAt: string;
+}
+
+interface SocialHandles {
+  platform: string;
+  followers: string;
+}
 
 // Map database influencer to our Influencer type
-function mapDBInfluencer(dbInfluencer: any): Influencer {
+function mapDBInfluencer(dbInfluencer: DBInfluencer): Influencer {
   // Parse social handles - it's a JSON string
-  let socialHandles: any = { platform: 'Instagram', followers: '0' };
+  let socialHandles: SocialHandles = { platform: 'Instagram', followers: '0' };
   
   if (dbInfluencer.socialHandles) {
     try {
@@ -41,7 +66,7 @@ function mapDBInfluencer(dbInfluencer: any): Influencer {
     username: dbInfluencer.name || '',
     fullName: dbInfluencer.name || '',
     platform: (socialHandles.platform?.toLowerCase() || 'instagram') as any,
-    profileImage: dbInfluencer.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(dbInfluencer.name || 'User')}&size=200&background=random&color=fff&bold=true&format=png`,
+    profileImage: getImageWithFallback(dbInfluencer.imageUrl, dbInfluencer.name || 'User', 200),
     followers: followers,
     following: 0,
     totalPosts: 0,
@@ -188,7 +213,7 @@ export async function createInfluencer(data: Partial<Influencer>): Promise<Influ
 
 export async function updateInfluencer(id: string, data: Partial<Influencer>): Promise<Influencer> {
   try {
-    const updateData: any = {};
+    const updateData: Partial<DBInfluencer> = {};
     
     if (data.fullName || data.username) {
       updateData.name = data.fullName || data.username;
@@ -337,6 +362,110 @@ export async function fetchNiches(): Promise<string[]> {
 }
 
 // ============================================
+// RECENT ACTIVITY API
+// ============================================
+
+export async function fetchRecentActivity(): Promise<Activity[]> {
+  try {
+    const activities: Activity[] = [];
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    
+    // Fetch newly added influencers (last 7 days)
+    const { data: newInfluencers, error: newError } = await supabase
+      .from('Influencer')
+      .select('id, name, createdAt')
+      .gte('createdAt', sevenDaysAgo)
+      .order('createdAt', { ascending: false })
+      .limit(10);
+    
+    if (!newError && newInfluencers) {
+      newInfluencers.forEach(inf => {
+        activities.push({
+          id: `new-${inf.id}`,
+          type: 'new_influencer',
+          influencerId: inf.id,
+          influencerName: inf.name,
+          description: 'New influencer added to tracking',
+          timestamp: inf.createdAt,
+        });
+      });
+    }
+    
+    // Fetch recently updated influencers (last 7 days, excluding newly created)
+    const { data: updatedInfluencers, error: updateError } = await supabase
+      .from('Influencer')
+      .select('id, name, lastUpdated, createdAt, trustScore')
+      .gte('lastUpdated', sevenDaysAgo)
+      .order('lastUpdated', { ascending: false })
+      .limit(20); // Fetch more to filter client-side
+    
+    if (!updateError && updatedInfluencers) {
+      // Filter out newly created influencers (where createdAt equals lastUpdated)
+      const actuallyUpdated = updatedInfluencers.filter(inf => 
+        new Date(inf.createdAt).getTime() !== new Date(inf.lastUpdated).getTime()
+      );
+      
+      actuallyUpdated.slice(0, 10).forEach(inf => {
+        activities.push({
+          id: `update-${inf.id}`,
+          type: 'rank_change',
+          influencerId: inf.id,
+          influencerName: inf.name,
+          description: `Profile updated - Trust Score: ${Math.round(inf.trustScore)}`,
+          timestamp: inf.lastUpdated,
+        });
+      });
+    }
+    
+    // Fetch recent mentions (last 7 days)
+    const { data: recentMentions, error: mentionError } = await supabase
+      .from('Mention')
+      .select(`
+        id,
+        scrapedAt,
+        label,
+        sentimentScore,
+        influencerId,
+        Influencer!inner(name)
+      `)
+      .gte('scrapedAt', sevenDaysAgo)
+      .order('scrapedAt', { ascending: false })
+      .limit(10);
+    
+    if (!mentionError && recentMentions) {
+      recentMentions.forEach((mention: any) => {
+        const sentimentLabel = mention.label === 'POSITIVE' ? 'positive' : 
+                              mention.label === 'NEGATIVE' ? 'negative' : 'neutral';
+        const influencerName = mention.Influencer?.name || 'Unknown';
+        activities.push({
+          id: `mention-${mention.id}`,
+          type: 'post',
+          influencerId: mention.influencerId,
+          influencerName: influencerName,
+          description: `New ${sentimentLabel} mention detected`,
+          timestamp: mention.scrapedAt,
+          metadata: {
+            sentiment: mention.sentimentScore,
+            label: mention.label,
+          },
+        });
+      });
+    }
+    
+    // Sort all activities by timestamp (most recent first)
+    activities.sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    );
+    
+    // Return top 20 most recent activities
+    return activities.slice(0, 20);
+  } catch (error) {
+    console.error('Failed to fetch recent activity:', error);
+    return [];
+  }
+}
+
+// ============================================
 // ANALYTICS API
 // ============================================
 
@@ -356,13 +485,16 @@ export async function fetchAnalytics(): Promise<Analytics> {
       ? influencers.reduce((sum, i) => sum + (i.engagementRate || 0), 0) / influencers.length 
       : 0;
     
+    // Fetch recent activity
+    const recentActivity = await fetchRecentActivity();
+    
     return {
       totalInfluencers: stats.totalInfluencers || 0,
       activeInfluencers: activeInfluencers,
       totalFollowers: totalFollowers,
       averageEngagement: avgEngagement,
       topPerformers: influencers.slice(0, 5),
-      recentActivity: [],
+      recentActivity: recentActivity,
       growthTrend: [],
     };
   } catch (error) {
