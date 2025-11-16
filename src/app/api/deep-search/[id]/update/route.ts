@@ -6,31 +6,40 @@ export async function OPTIONS() {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   });
 }
 
-// GET /api/deep-search/[id] - Get single deep search analysis
-export async function GET(
+// POST /api/deep-search/[id]/update - Update deep search analysis (setter, for background jobs)
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
+    const body = await request.json();
     
-    // TODO: Check if user has access (is first buyer or analysis is public)
-    // TODO: Replace with actual database query
+    // TODO: Add authentication for background jobs
+    // TODO: Replace with actual database update
     // Example with Supabase:
     // const { data, error } = await supabase
     //   .from('DeepSearchAnalysis')
-    //   .select('*')
+    //   .update({
+    //     status: body.status,
+    //     analysisData: body.analysisData,
+    //     queriesRun: body.queriesRun,
+    //     sourcesAnalyzed: body.sourcesAnalyzed,
+    //     processingTimeMs: body.processingTimeMs,
+    //     completedAt: body.status === 'COMPLETED' ? new Date().toISOString() : undefined,
+    //   })
     //   .eq('id', id)
+    //   .select()
     //   .single();
     
     return NextResponse.json(
-      { success: false, error: 'Not implemented' },
+      { success: false, error: 'Not implemented - connect database' },
       {
         status: 501,
         headers: {
@@ -39,9 +48,9 @@ export async function GET(
       }
     );
   } catch (error) {
-    console.error('Error fetching deep search:', error);
+    console.error('Error updating deep search:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch deep search' },
+      { success: false, error: 'Failed to update deep search' },
       { 
         status: 500,
         headers: {

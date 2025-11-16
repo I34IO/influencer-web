@@ -6,31 +6,40 @@ export async function OPTIONS() {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   });
 }
 
-// GET /api/users/[id] - Get single user
-export async function GET(
+// POST /api/influencers/[id]/update - Update influencer (setter)
+export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
+    const body = await request.json();
     
-    // TODO: Add authentication check
-    // TODO: Replace with actual database query
+    // TODO: Replace with actual database update
     // Example with Supabase:
     // const { data, error } = await supabase
-    //   .from('User')
-    //   .select('id, email, role, status, firstName, lastName, company, avatar, subscriptionTier, createdAt')
+    //   .from('Influencer')
+    //   .update({
+    //     name: body.name,
+    //     imageUrl: body.imageUrl,
+    //     summary: body.summary,
+    //     socialHandles: body.socialHandles ? JSON.stringify(body.socialHandles) : undefined,
+    //     niche: body.niche,
+    //     trustScore: body.trustScore,
+    //     lastUpdated: new Date().toISOString(),
+    //   })
     //   .eq('id', id)
+    //   .select()
     //   .single();
     
     return NextResponse.json(
-      { success: false, error: 'Not implemented' },
+      { success: false, error: 'Not implemented - connect database' },
       {
         status: 501,
         headers: {
@@ -39,9 +48,9 @@ export async function GET(
       }
     );
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error('Error updating influencer:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch user' },
+      { success: false, error: 'Failed to update influencer' },
       { 
         status: 500,
         headers: {
