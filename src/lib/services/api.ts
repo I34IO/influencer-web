@@ -1,6 +1,4 @@
-// API Service Layer
-// Connects to the real backend API
-
+// API Service Layer - Direct Supabase Connection
 import { 
   Influencer, 
   Ranking, 
@@ -10,60 +8,18 @@ import {
   FilterOptions, 
   SortOption 
 } from '@/types';
-import { API_CONFIG, API_ENDPOINTS, buildURL, logAPI, logAPIError } from '@/lib/config/api';
+import { supabase } from '@/lib/supabase/client';
 
-// Generic fetch wrapper with error handling
-async function apiFetch<T>(
-  url: string, 
-  options?: RequestInit
-): Promise<T> {
-  // URL is already built by buildURL(), so use it directly
-  logAPI(options?.method || 'GET', url, options?.body);
-  
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
-    
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
-    });
-    
-    clearTimeout(timeoutId);
-    
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
-    
-    const result = await response.json();
-    
-    // Handle wrapped response format {success: true, data: [...]}
-    if (result.success && result.data !== undefined) {
-      return result.data as T;
-    }
-    
-    return result as T;
-  } catch (error) {
-    logAPIError(options?.method || 'GET', url, error);
-    throw error;
-  }
-}
-
-// Map API influencer to our Influencer type
-function mapAPIInfluencer(apiInfluencer: any): Influencer {
+// Map database influencer to our Influencer type
+function mapDBInfluencer(dbInfluencer: any): Influencer {
   // Parse social handles - it's a JSON string
   let socialHandles: any = { platform: 'Instagram', followers: '0' };
   
-  if (apiInfluencer.socialHandles) {
+  if (dbInfluencer.socialHandles) {
     try {
-      // The API returns a JSON string, parse it directly
-      socialHandles = JSON.parse(apiInfluencer.socialHandles);
+      socialHandles = JSON.parse(dbInfluencer.socialHandles);
     } catch (e) {
-      console.warn('Failed to parse socialHandles for', apiInfluencer.name, ':', e);
+      console.warn('Failed to parse socialHandles for', dbInfluencer.name, ':', e);
     }
   }
   
@@ -81,46 +37,45 @@ function mapAPIInfluencer(apiInfluencer: any): Influencer {
   const followers = parseFollowers(socialHandles.followers || '0');
   
   const mapped: Influencer = {
-    id: apiInfluencer.id,
-    username: apiInfluencer.name || '',
-    fullName: apiInfluencer.name || '',
+    id: dbInfluencer.id,
+    username: dbInfluencer.name || '',
+    fullName: dbInfluencer.name || '',
     platform: (socialHandles.platform?.toLowerCase() || 'instagram') as any,
-    // Use the actual image URL from the backend API (real YouTube/Instagram profile pictures)
-    profileImage: apiInfluencer.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(apiInfluencer.name || 'User')}&size=200&background=random&color=fff&bold=true&format=png`,
+    profileImage: dbInfluencer.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(dbInfluencer.name || 'User')}&size=200&background=random&color=fff&bold=true&format=png`,
     followers: followers,
-    following: 0, // Not provided by API
-    totalPosts: 0, // Not provided by API
-    bio: '',
-    verified: apiInfluencer.trustScore >= 80,
-    category: apiInfluencer.niche || 'Other',
+    following: 0,
+    totalPosts: 0,
+    bio: dbInfluencer.summary || '',
+    verified: dbInfluencer.trustScore >= 80,
+    category: dbInfluencer.niche || 'Other',
     location: '',
     email: '',
     phone: '',
-    joinedDate: apiInfluencer.createdAt || new Date().toISOString(),
-    lastActive: apiInfluencer.lastUpdated || new Date().toISOString(),
+    joinedDate: dbInfluencer.createdAt || new Date().toISOString(),
+    lastActive: dbInfluencer.lastUpdated || new Date().toISOString(),
     
-    // Metrics - calculated from available data
-    engagementRate: Math.max(0, (apiInfluencer.avgSentiment || 0) * 10 + 5), // Convert sentiment to engagement
-    averageLikes: Math.round(followers * 0.05), // Estimate
-    averageComments: Math.round(followers * 0.01), // Estimate
-    averageShares: Math.round(followers * 0.005), // Estimate
-    reachRate: Math.min(100, apiInfluencer.trustScore || 0),
+    // Metrics
+    engagementRate: Math.max(0, (dbInfluencer.avgSentiment || 0) * 10 + 5),
+    averageLikes: Math.round(followers * 0.05),
+    averageComments: Math.round(followers * 0.01),
+    averageShares: Math.round(followers * 0.005),
+    reachRate: Math.min(100, dbInfluencer.trustScore || 0),
     
     // Scores
-    overallScore: apiInfluencer.trustScore || 0,
-    engagementScore: Math.min(100, (apiInfluencer.goodActionCount || 0) * 10),
-    growthScore: Math.max(0, 100 - (apiInfluencer.dramaCount || 0) * 5),
-    consistencyScore: Math.min(100, (apiInfluencer.neutralCount || 0) * 2),
+    overallScore: dbInfluencer.trustScore || 0,
+    engagementScore: Math.min(100, (dbInfluencer.goodActionCount || 0) * 10),
+    growthScore: Math.max(0, 100 - (dbInfluencer.dramaCount || 0) * 5),
+    consistencyScore: Math.min(100, (dbInfluencer.neutralCount || 0) * 2),
     
     // Growth metrics
-    followerGrowth30d: Math.round(followers * 0.05), // Estimate 5% growth
-    followerGrowth7d: Math.round(followers * 0.01), // Estimate 1% growth
+    followerGrowth30d: Math.round(followers * 0.05),
+    followerGrowth7d: Math.round(followers * 0.01),
     
     // Status
     status: 'active',
-    tier: apiInfluencer.trustScore >= 90 ? 'platinum' : 
-          apiInfluencer.trustScore >= 75 ? 'gold' : 
-          apiInfluencer.trustScore >= 60 ? 'silver' : 'bronze',
+    tier: dbInfluencer.trustScore >= 90 ? 'platinum' : 
+          dbInfluencer.trustScore >= 75 ? 'gold' : 
+          dbInfluencer.trustScore >= 60 ? 'silver' : 'bronze',
   };
   
   return mapped;
@@ -134,59 +89,67 @@ export async function fetchInfluencers(
   filters?: FilterOptions,
   sort?: SortOption
 ): Promise<Influencer[]> {
-  const params: Record<string, any> = {
-    limit: 100, // Default limit
-  };
-  
-  // Add sorting
-  if (sort) {
-    params.sortBy = sort.field;
-    params.sortOrder = sort.direction;
-  } else {
-    // Default sort by trust score
-    params.sortBy = 'trustScore';
-    params.sortOrder = 'desc';
+  try {
+    let query = supabase.from('Influencer').select('*');
+    
+    // Add sorting
+    const sortField = sort?.field || 'trustScore';
+    const sortDirection = sort?.direction || 'desc';
+    
+    // Map frontend sort fields to database columns
+    const fieldMap: Record<string, string> = {
+      'overallScore': 'trustScore',
+      'trustScore': 'trustScore',
+      'name': 'name',
+      'createdAt': 'createdAt',
+      'lastUpdated': 'lastUpdated',
+    };
+    
+    const dbField = fieldMap[sortField] || 'trustScore';
+    query = query.order(dbField, { ascending: sortDirection === 'asc' });
+    
+    // Add filters
+    if (filters) {
+      if (filters.category?.length) {
+        query = query.in('niche', filters.category);
+      }
+      if (filters.minFollowers || filters.maxFollowers) {
+        // Note: Followers are stored in socialHandles JSON, complex filtering
+        // For now, we'll fetch all and filter client-side
+      }
+    }
+    
+    // Limit results
+    query = query.limit(100);
+    
+    const { data, error } = await query;
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    return (data || []).map(mapDBInfluencer);
+  } catch (error) {
+    console.error('Failed to fetch influencers:', error);
+    throw error;
   }
-  
-  // Add filters
-  if (filters) {
-    if (filters.platform?.length) {
-      params.platform = filters.platform.join(',');
-    }
-    if (filters.category?.length) {
-      params.category = filters.category.join(',');
-    }
-    if (filters.tier?.length) {
-      params.tier = filters.tier.join(',');
-    }
-    if (filters.status?.length) {
-      params.status = filters.status.join(',');
-    }
-    if (filters.minFollowers) {
-      params.minFollowers = filters.minFollowers;
-    }
-    if (filters.maxFollowers) {
-      params.maxFollowers = filters.maxFollowers;
-    }
-    if (filters.minEngagement) {
-      params.minEngagement = filters.minEngagement;
-    }
-    if (filters.maxEngagement) {
-      params.maxEngagement = filters.maxEngagement;
-    }
-  }
-  
-  const fullUrl = buildURL(API_ENDPOINTS.influencers, params);
-  const apiInfluencers = await apiFetch<any[]>(fullUrl);
-  
-  // Map API response to our Influencer type
-  return apiInfluencers.map(mapAPIInfluencer);
 }
 
 export async function fetchInfluencerById(id: string): Promise<Influencer | null> {
   try {
-    const url = buildURL(API_ENDPOINTS.influencerById(id));
-    return await apiFetch<Influencer>(url);
+    const { data, error } = await supabase
+      .from('Influencer')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      return null;
+    }
+    
+    return data ? mapDBInfluencer(data) : null;
   } catch (error) {
     console.error('Failed to fetch influencer:', error);
     return null;
@@ -194,26 +157,91 @@ export async function fetchInfluencerById(id: string): Promise<Influencer | null
 }
 
 export async function createInfluencer(data: Partial<Influencer>): Promise<Influencer> {
-  const url = buildURL(API_ENDPOINTS.influencers);
-  return apiFetch<Influencer>(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-  });
+  try {
+    const { data: newInfluencer, error } = await supabase
+      .from('Influencer')
+      .insert({
+        name: data.fullName || data.username,
+        imageUrl: data.profileImage,
+        summary: data.bio,
+        socialHandles: JSON.stringify({
+          platform: data.platform,
+          followers: data.followers?.toString() || '0',
+        }),
+        niche: data.category,
+        language: 'fr',
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    return mapDBInfluencer(newInfluencer);
+  } catch (error) {
+    console.error('Failed to create influencer:', error);
+    throw error;
+  }
 }
 
 export async function updateInfluencer(id: string, data: Partial<Influencer>): Promise<Influencer> {
-  const url = buildURL(API_ENDPOINTS.influencerById(id));
-  return apiFetch<Influencer>(url, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
+  try {
+    const updateData: any = {};
+    
+    if (data.fullName || data.username) {
+      updateData.name = data.fullName || data.username;
+    }
+    if (data.profileImage) {
+      updateData.imageUrl = data.profileImage;
+    }
+    if (data.bio) {
+      updateData.summary = data.bio;
+    }
+    if (data.category) {
+      updateData.niche = data.category;
+    }
+    if (data.overallScore !== undefined) {
+      updateData.trustScore = data.overallScore;
+    }
+    
+    updateData.lastUpdated = new Date().toISOString();
+    
+    const { data: updated, error } = await supabase
+      .from('Influencer')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    return mapDBInfluencer(updated);
+  } catch (error) {
+    console.error('Failed to update influencer:', error);
+    throw error;
+  }
 }
 
 export async function deleteInfluencer(id: string): Promise<void> {
-  const url = buildURL(API_ENDPOINTS.influencerById(id));
-  await apiFetch<void>(url, {
-    method: 'DELETE',
-  });
+  try {
+    const { error } = await supabase
+      .from('Influencer')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+  } catch (error) {
+    console.error('Failed to delete influencer:', error);
+    throw error;
+  }
 }
 
 // ============================================
@@ -221,9 +249,23 @@ export async function deleteInfluencer(id: string): Promise<void> {
 // ============================================
 
 export async function searchInfluencers(query: string): Promise<Influencer[]> {
-  const url = buildURL(API_ENDPOINTS.search, { q: query });
-  const apiInfluencers = await apiFetch<any[]>(url);
-  return apiInfluencers.map(mapAPIInfluencer);
+  try {
+    const { data, error } = await supabase
+      .from('Influencer')
+      .select('*')
+      .ilike('name', `%${query}%`)
+      .limit(50);
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    return (data || []).map(mapDBInfluencer);
+  } catch (error) {
+    console.error('Failed to search influencers:', error);
+    throw error;
+  }
 }
 
 // ============================================
@@ -231,8 +273,42 @@ export async function searchInfluencers(query: string): Promise<Influencer[]> {
 // ============================================
 
 export async function fetchStats(): Promise<any> {
-  const url = buildURL(API_ENDPOINTS.stats);
-  return apiFetch<any>(url);
+  try {
+    // Get total count
+    const { count: totalInfluencers, error: countError } = await supabase
+      .from('Influencer')
+      .select('*', { count: 'exact', head: true });
+    
+    if (countError) {
+      console.error('Supabase error:', countError);
+    }
+    
+    // Get all influencers for calculations
+    const { data: influencers, error } = await supabase
+      .from('Influencer')
+      .select('trustScore, dramaCount, goodActionCount');
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    const totalDramas = influencers?.reduce((sum, i) => sum + (i.dramaCount || 0), 0) || 0;
+    const totalGoodActions = influencers?.reduce((sum, i) => sum + (i.goodActionCount || 0), 0) || 0;
+    const avgTrustScore = influencers?.length 
+      ? influencers.reduce((sum, i) => sum + (i.trustScore || 0), 0) / influencers.length 
+      : 0;
+    
+    return {
+      totalInfluencers: totalInfluencers || 0,
+      totalDramas,
+      totalGoodActions,
+      avgTrustScore: Math.round(avgTrustScore * 10) / 10,
+    };
+  } catch (error) {
+    console.error('Failed to fetch stats:', error);
+    throw error;
+  }
 }
 
 // ============================================
@@ -240,53 +316,54 @@ export async function fetchStats(): Promise<any> {
 // ============================================
 
 export async function fetchNiches(): Promise<string[]> {
-  const url = buildURL(API_ENDPOINTS.niches);
-  return apiFetch<string[]>(url);
+  try {
+    const { data, error } = await supabase
+      .from('Influencer')
+      .select('niche')
+      .not('niche', 'is', null);
+    
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+    
+    // Get unique niches
+    const niches = [...new Set(data?.map(i => i.niche).filter(Boolean) || [])];
+    return niches as string[];
+  } catch (error) {
+    console.error('Failed to fetch niches:', error);
+    throw error;
+  }
 }
 
 // ============================================
-// ANALYTICS API (Combines stats and top influencers)
+// ANALYTICS API
 // ============================================
 
 export async function fetchAnalytics(): Promise<Analytics> {
   try {
-    // Fetch top 20 influencers by trust score (as specified)
-    const params = {
-      limit: 20,
-      sortBy: 'trustScore',
-      sortOrder: 'desc'
-    };
+    // Fetch top 20 influencers by overall score
+    const influencers = await fetchInfluencers(
+      undefined,
+      { field: 'overallScore', direction: 'desc' }
+    );
     
-    const fullUrl = buildURL(API_ENDPOINTS.influencers, params);
-    const apiInfluencers = await apiFetch<any[]>(fullUrl);
+    const stats = await fetchStats();
     
-    // Map the API data to our Influencer type
-    const influencers = apiInfluencers.map(mapAPIInfluencer);
-    
-    // Try to fetch stats, but don't fail if not available
-    let stats: any = {};
-    try {
-      stats = await fetchStats();
-    } catch (error) {
-      console.warn('Stats endpoint not available, calculating from influencers');
-    }
-    
-    // Calculate stats from influencers data
     const activeInfluencers = influencers.filter(i => i.status === 'active').length;
     const totalFollowers = influencers.reduce((sum, i) => sum + (i.followers || 0), 0);
     const avgEngagement = influencers.length > 0 
       ? influencers.reduce((sum, i) => sum + (i.engagementRate || 0), 0) / influencers.length 
       : 0;
     
-    // Transform API response to match Analytics interface
     return {
-      totalInfluencers: stats.totalInfluencers || 438, // Use API total if available
+      totalInfluencers: stats.totalInfluencers || 0,
       activeInfluencers: activeInfluencers,
       totalFollowers: totalFollowers,
       averageEngagement: avgEngagement,
-      topPerformers: influencers.slice(0, 5), // Top 5 from the 20 fetched
-      recentActivity: stats.recentActivity || [],
-      growthTrend: stats.growthTrend || [],
+      topPerformers: influencers.slice(0, 5),
+      recentActivity: [],
+      growthTrend: [],
     };
   } catch (error) {
     console.error('Failed to fetch analytics:', error);
@@ -300,12 +377,6 @@ export async function fetchAnalytics(): Promise<Analytics> {
 
 export async function fetchRankings(): Promise<Ranking[]> {
   try {
-    const url = buildURL(API_ENDPOINTS.rankings);
-    return await apiFetch<Ranking[]>(url);
-  } catch (error) {
-    console.error('Rankings endpoint not available, generating from influencers');
-    
-    // Fallback: Generate rankings from influencers
     const influencers = await fetchInfluencers(
       undefined,
       { field: 'overallScore', direction: 'desc' }
@@ -313,52 +384,43 @@ export async function fetchRankings(): Promise<Ranking[]> {
     
     return influencers.map((influencer, index) => ({
       rank: index + 1,
-      previousRank: index + 1, // TODO: Track historical ranks
+      previousRank: index + 1,
       influencer,
       score: influencer.overallScore,
       change: 0,
       trend: 'stable' as const,
     }));
+  } catch (error) {
+    console.error('Failed to fetch rankings:', error);
+    throw error;
   }
 }
 
 // ============================================
-// EVENTS API (May not be available in backend)
+// EVENTS API
 // ============================================
 
 export async function fetchEvents(): Promise<Event[]> {
-  try {
-    const url = buildURL(API_ENDPOINTS.events);
-    return await apiFetch<Event[]>(url);
-  } catch (error) {
-    console.error('Events endpoint not available');
-    return [];
-  }
+  // Events table may not exist yet
+  console.warn('Events endpoint not implemented');
+  return [];
 }
 
 export async function fetchEventById(id: string): Promise<Event | null> {
-  try {
-    const url = buildURL(API_ENDPOINTS.eventById(id));
-    return await apiFetch<Event>(url);
-  } catch (error) {
-    console.error('Failed to fetch event:', error);
-    return null;
-  }
+  console.warn('Events endpoint not implemented');
+  return null;
 }
 
 // ============================================
-// QR SCANS API (May not be available in backend)
+// QR SCANS API
 // ============================================
 
 export async function fetchQRScans(): Promise<QRScan[]> {
-  // This endpoint may not exist in the backend
-  // Return empty array for now
-  console.warn('QR Scans endpoint not implemented in backend');
+  console.warn('QR Scans endpoint not implemented');
   return [];
 }
 
 export async function createQRScan(data: Partial<QRScan>): Promise<QRScan> {
-  // This endpoint may not exist in the backend
-  console.warn('QR Scans endpoint not implemented in backend');
-  throw new Error('QR Scans not supported by backend');
+  console.warn('QR Scans endpoint not implemented');
+  throw new Error('QR Scans not supported');
 }
