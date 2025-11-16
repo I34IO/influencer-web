@@ -18,11 +18,11 @@ export async function OPTIONS() {
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get('q') || '';
-  
+
   if (!query) {
     return NextResponse.json(
       { success: false, error: 'Search query is required' },
-      { 
+      {
         status: 400,
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -30,26 +30,26 @@ export async function GET(request: NextRequest) {
       }
     );
   }
-  
+
   try {
     const backendUrl = new URL(`${BACKEND_API_URL}/search`);
     backendUrl.searchParams.append('q', query);
-    
+
     console.log('[API Proxy] Searching from:', backendUrl.toString());
-    
+
     const response = await fetch(backendUrl.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Backend API returned ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -59,17 +59,7 @@ export async function GET(request: NextRequest) {
     console.error('Error proxying search to backend:', error);
     return NextResponse.json(
       { success: false, error: 'Search failed' },
-      { 
-        status: 500,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
-      }
-    );
-  }
-}
-Search failed' },
-      { 
+      {
         status: 500,
         headers: {
           'Access-Control-Allow-Origin': '*',
