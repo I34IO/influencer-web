@@ -2,7 +2,9 @@
 // This file manages API endpoints and configuration
 
 export const API_CONFIG = {
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.80.222.41:3000/api/public',
+  // Use local Next.js API routes which proxy to the backend
+  // This avoids CORS issues and allows the backend to be on a different network
+  baseURL: '/api',
   timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '10000', 10),
   debug: process.env.NEXT_PUBLIC_API_DEBUG === 'true',
 };
@@ -32,17 +34,37 @@ export const API_ENDPOINTS = {
 
 // Helper function to build full URL
 export function buildURL(endpoint: string, params?: Record<string, any>): string {
-  const url = new URL(endpoint, API_CONFIG.baseURL);
+  // Handle relative URLs (for Next.js API routes)
+  let fullUrl: string;
   
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.append(key, String(value));
-      }
-    });
+  if (API_CONFIG.baseURL.startsWith('http')) {
+    // Absolute URL - use URL constructor
+    const url = new URL(endpoint, API_CONFIG.baseURL);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          url.searchParams.append(key, String(value));
+        }
+      });
+    }
+    fullUrl = url.toString();
+  } else {
+    // Relative URL - build manually
+    const path = `${API_CONFIG.baseURL}${endpoint}`;
+    if (params && Object.keys(params).length > 0) {
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      fullUrl = `${path}?${searchParams.toString()}`;
+    } else {
+      fullUrl = path;
+    }
   }
   
-  return url.toString();
+  return fullUrl;
 }
 
 // Helper function for API logging

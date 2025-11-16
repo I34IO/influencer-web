@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.80.222.41:3000/api/public';
+
 // Disable CORS
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -12,41 +14,34 @@ export async function OPTIONS() {
   });
 }
 
-// GET /api/influencers - Get all influencers with filters and sorting
+// GET /api/influencers - Proxy to backend API
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   
-  // Extract query parameters
-  const limit = parseInt(searchParams.get('limit') || '100');
-  const page = parseInt(searchParams.get('page') || '1');
-  const sortBy = searchParams.get('sortBy') || 'trustScore';
-  const sortOrder = searchParams.get('sortOrder') || 'desc';
-  const search = searchParams.get('q') || '';
-  const niche = searchParams.get('niche') || '';
-  
   try {
-    // TODO: Replace with actual database query
-    // Example with Supabase:
-    // const { data, error } = await supabase
-    //   .from('Influencer')
-    //   .select('*')
-    //   .order(sortBy, { ascending: sortOrder === 'asc' })
-    //   .limit(limit);
+    // Build the backend URL with all query parameters
+    const backendUrl = new URL(`${BACKEND_API_URL}/influencers`);
+    searchParams.forEach((value, key) => {
+      backendUrl.searchParams.append(key, value);
+    });
     
-    // For now, return mock response structure
-    const mockData = {
-      success: true,
-      data: [],
-      pagination: {
-        page,
-        limit,
-        total: 0,
-        totalPages: 0,
-        hasMore: false,
+    console.log('[API Proxy] Fetching from:', backendUrl.toString());
+    
+    // Fetch from backend API
+    const response = await fetch(backendUrl.toString(), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    };
+    });
     
-    return NextResponse.json(mockData, {
+    if (!response.ok) {
+      throw new Error(`Backend API returned ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -54,9 +49,9 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching influencers:', error);
+    console.error('Error proxying to backend:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch influencers' },
+      { success: false, error: 'Failed to fetch influencers from backend' },
       { 
         status: 500,
         headers: {

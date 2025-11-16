@@ -14,11 +14,10 @@ import { API_CONFIG, API_ENDPOINTS, buildURL, logAPI, logAPIError } from '@/lib/
 
 // Generic fetch wrapper with error handling
 async function apiFetch<T>(
-  endpoint: string, 
+  url: string, 
   options?: RequestInit
 ): Promise<T> {
-  const url = endpoint.startsWith('http') ? endpoint : `${API_CONFIG.baseURL}${endpoint}`;
-  
+  // URL is already built by buildURL(), so use it directly
   logAPI(options?.method || 'GET', url, options?.body);
   
   try {
@@ -86,7 +85,8 @@ function mapAPIInfluencer(apiInfluencer: any): Influencer {
     username: apiInfluencer.name || '',
     fullName: apiInfluencer.name || '',
     platform: (socialHandles.platform?.toLowerCase() || 'instagram') as any,
-    profileImage: apiInfluencer.imageUrl || '',
+    // Use the actual image URL from the backend API (real YouTube/Instagram profile pictures)
+    profileImage: apiInfluencer.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(apiInfluencer.name || 'User')}&size=200&background=random&color=fff&bold=true&format=png`,
     followers: followers,
     following: 0, // Not provided by API
     totalPosts: 0, // Not provided by API
@@ -176,8 +176,7 @@ export async function fetchInfluencers(
     }
   }
   
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencers}`;
-  const fullUrl = buildURL(url, params);
+  const fullUrl = buildURL(API_ENDPOINTS.influencers, params);
   const apiInfluencers = await apiFetch<any[]>(fullUrl);
   
   // Map API response to our Influencer type
@@ -186,7 +185,7 @@ export async function fetchInfluencers(
 
 export async function fetchInfluencerById(id: string): Promise<Influencer | null> {
   try {
-    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencerById(id)}`;
+    const url = buildURL(API_ENDPOINTS.influencerById(id));
     return await apiFetch<Influencer>(url);
   } catch (error) {
     console.error('Failed to fetch influencer:', error);
@@ -195,7 +194,7 @@ export async function fetchInfluencerById(id: string): Promise<Influencer | null
 }
 
 export async function createInfluencer(data: Partial<Influencer>): Promise<Influencer> {
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencers}`;
+  const url = buildURL(API_ENDPOINTS.influencers);
   return apiFetch<Influencer>(url, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -203,7 +202,7 @@ export async function createInfluencer(data: Partial<Influencer>): Promise<Influ
 }
 
 export async function updateInfluencer(id: string, data: Partial<Influencer>): Promise<Influencer> {
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencerById(id)}`;
+  const url = buildURL(API_ENDPOINTS.influencerById(id));
   return apiFetch<Influencer>(url, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -211,7 +210,7 @@ export async function updateInfluencer(id: string, data: Partial<Influencer>): P
 }
 
 export async function deleteInfluencer(id: string): Promise<void> {
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencerById(id)}`;
+  const url = buildURL(API_ENDPOINTS.influencerById(id));
   await apiFetch<void>(url, {
     method: 'DELETE',
   });
@@ -222,8 +221,7 @@ export async function deleteInfluencer(id: string): Promise<void> {
 // ============================================
 
 export async function searchInfluencers(query: string): Promise<Influencer[]> {
-  const baseUrl = `${API_CONFIG.baseURL}${API_ENDPOINTS.search}`;
-  const url = buildURL(baseUrl, { q: query });
+  const url = buildURL(API_ENDPOINTS.search, { q: query });
   const apiInfluencers = await apiFetch<any[]>(url);
   return apiInfluencers.map(mapAPIInfluencer);
 }
@@ -233,7 +231,7 @@ export async function searchInfluencers(query: string): Promise<Influencer[]> {
 // ============================================
 
 export async function fetchStats(): Promise<any> {
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.stats}`;
+  const url = buildURL(API_ENDPOINTS.stats);
   return apiFetch<any>(url);
 }
 
@@ -242,7 +240,7 @@ export async function fetchStats(): Promise<any> {
 // ============================================
 
 export async function fetchNiches(): Promise<string[]> {
-  const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.niches}`;
+  const url = buildURL(API_ENDPOINTS.niches);
   return apiFetch<string[]>(url);
 }
 
@@ -259,8 +257,7 @@ export async function fetchAnalytics(): Promise<Analytics> {
       sortOrder: 'desc'
     };
     
-    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.influencers}`;
-    const fullUrl = buildURL(url, params);
+    const fullUrl = buildURL(API_ENDPOINTS.influencers, params);
     const apiInfluencers = await apiFetch<any[]>(fullUrl);
     
     // Map the API data to our Influencer type
@@ -303,7 +300,7 @@ export async function fetchAnalytics(): Promise<Analytics> {
 
 export async function fetchRankings(): Promise<Ranking[]> {
   try {
-    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.rankings}`;
+    const url = buildURL(API_ENDPOINTS.rankings);
     return await apiFetch<Ranking[]>(url);
   } catch (error) {
     console.error('Rankings endpoint not available, generating from influencers');
@@ -331,7 +328,7 @@ export async function fetchRankings(): Promise<Ranking[]> {
 
 export async function fetchEvents(): Promise<Event[]> {
   try {
-    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.events}`;
+    const url = buildURL(API_ENDPOINTS.events);
     return await apiFetch<Event[]>(url);
   } catch (error) {
     console.error('Events endpoint not available');
@@ -341,7 +338,7 @@ export async function fetchEvents(): Promise<Event[]> {
 
 export async function fetchEventById(id: string): Promise<Event | null> {
   try {
-    const url = `${API_CONFIG.baseURL}${API_ENDPOINTS.eventById(id)}`;
+    const url = buildURL(API_ENDPOINTS.eventById(id));
     return await apiFetch<Event>(url);
   } catch (error) {
     console.error('Failed to fetch event:', error);

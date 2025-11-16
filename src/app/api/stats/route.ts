@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://10.80.222.41:3000/api/public';
+
 // Disable CORS
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -12,44 +14,36 @@ export async function OPTIONS() {
   });
 }
 
-// GET /api/stats - Get overall statistics
+// GET /api/stats - Proxy to backend API
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Replace with actual database queries
-    // Example with Supabase:
-    // const { count: totalInfluencers } = await supabase
-    //   .from('Influencer')
-    //   .select('*', { count: 'exact', head: true });
-    //
-    // const { data: influencers } = await supabase
-    //   .from('Influencer')
-    //   .select('trustScore, socialHandles');
-    //
-    // Calculate stats from the data...
+    const backendUrl = `${BACKEND_API_URL}/stats`;
     
-    const stats = {
-      success: true,
-      data: {
-        totalInfluencers: 0,
-        activeInfluencers: 0,
-        totalFollowers: 0,
-        averageEngagement: 0,
-        averageTrustScore: 0,
-        topNiches: [],
-        recentActivity: [],
-        growthTrend: [],
+    console.log('[API Proxy] Fetching stats from:', backendUrl);
+    
+    // Fetch from backend API
+    const response = await fetch(backendUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    };
+    });
     
-    return NextResponse.json(stats, {
+    if (!response.ok) {
+      throw new Error(`Backend API returned ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (error) {
-    console.error('Error fetching stats:', error);
+    console.error('Error proxying stats to backend:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch stats' },
+      { success: false, error: 'Failed to fetch stats from backend' },
       { 
         status: 500,
         headers: {
